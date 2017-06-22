@@ -5,17 +5,16 @@
 // 1. 实现一个函数，在一个有序整型数组中二分查找出指定的值，找到则返回该值的位置，找不到返回 -1。
 #include<stdio.h>
 #include<stdlib.h>
-int findInSortArray(int array[],int length, int value)
+int findInSortArray(int array[],unsigned int length, unsigned int value)
 {
     int index = -1;
     int startIdx = 0;
     int endIdx = length-1;
     int compareVal = 0;
     int compareIdx = 0;
-    //
 
     while(startIdx <= endIdx){
-        compareIdx = (startIdx + endIdx)*0.5;
+        compareIdx = (startIdx * 0.5 + endIdx * 0.5);
         compareVal = array[compareIdx];
         //printf("---- sorted indx %d %d \n", compareIdx, compareVal, value, length);
 
@@ -112,30 +111,15 @@ Lnode * mergeSortedListNoHead(Lnode *nodeA, Lnode *nodeB)
 		return nodeA;
 	}
 
-	if (!nodeA)
+	if (nodeA->value >= nodeB->value)
 	{
 		node = nodeB;
-	}
-	else if (!nodeB)
-	{
-		node = nodeA;
-	}
-	else if (nodeA->value >= nodeB->value)
-	{
-		node = nodeB;
-	}
-	else
-	{
-		node = nodeA;
-	}
-
-	if (node == nodeA) 
-	{
-		nextA = nextA->next;
-	}
-	else
-       	{
 		nextB = nextB->next;
+	}
+	else
+	{
+		node = nodeA;
+		nextA = nextA->next;
 	}
 
 	Lnode *sortedListNode = mergeSortedListNoHead(nextA,nextB);
@@ -148,7 +132,7 @@ Lnode * mergeSortedListNoHead(Lnode *nodeA, Lnode *nodeB)
 	return node;
 }
 
-Lnode * mergeSortedArray2(int arrayA[], int aLength, int arrayB[], int bLength)
+Lnode * mergeSortedArray2(int arrayA[], unsigned int aLength, int arrayB[], unsigned int bLength)
 {	
 	Lnode *node = mergeSortedListRecurse(transferToList(arrayA, aLength), transferToList(arrayB, bLength));
 	return node; 
@@ -156,7 +140,7 @@ Lnode * mergeSortedArray2(int arrayA[], int aLength, int arrayB[], int bLength)
 
 // 3.2 使用循环方式实现
 
-Lnode * mergeSortedArray(int arrayA[], int aLength, int arrayB[], int bLength)
+Lnode * mergeSortedArray(int arrayA[], unsigned int aLength, int arrayB[], unsigned int bLength)
 {	
 	Lnode *node = mergeSortedList(transferToList(arrayA, aLength), transferToList(arrayB, bLength));
 	return node; 
@@ -205,7 +189,7 @@ void delList(Lnode* node);
 int main(int argc,char *argv[])
 {
 
-	printf("hello world\n");
+	printf("main \n");
 
 	int test1[] = {0,1,3};
 	int test2[] = {1,0};
@@ -254,7 +238,6 @@ int main(int argc,char *argv[])
 	printList(nodeList5);
 	printList(nodeList6);
 	printList(nodeList7);
-
 
 
 	printf("\n merge1\n");

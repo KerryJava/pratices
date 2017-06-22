@@ -87,6 +87,12 @@ Lnode * mergeSortedListRecurse(Lnode *linkA, Lnode *linkB)
 {
 	Lnode *node = mergeSortedListNoHead(linkA->next, linkB->next);
 	linkA->next = node;
+
+	if (linkB) 
+	{
+		free(linkB);
+	}
+
 	return linkA;
 }
 
@@ -184,11 +190,17 @@ Lnode * mergeSortedList(Lnode *linkA, Lnode *linkB)
 
 	lastNode = nodeA ? nodeA : nodeB;
 	prevNode->next = lastNode;
+	
+	if (linkB)
+	{
+		free(linkB);
+	}
 
 	return retNode;
 }
 
 void printList(Lnode* curNode);
+void delList(Lnode* node);
 
 int main(int argc,char *argv[])
 {
@@ -259,7 +271,13 @@ int main(int argc,char *argv[])
 	// Lnode *mergeNodeList2 = mergeSortedArray2(test1, sizeof(test1)/sizeof(int), test2, sizeof(test2)/sizeof(int));
 	// printList(mergeNodeList2);
 
-
+	delList(nodeList1);
+	delList(nodeList2);
+	delList(nodeList3);
+	delList(nodeList4);
+	delList(nodeList5);
+	delList(mergeNodeList1);
+	delList(mergeNodeList2);
 
 
 	while(argc-->1) printf("%s/n",*++argv); 
@@ -274,9 +292,25 @@ void printList(Lnode* node)
 	for (int i = 0; curNode && curNode->next; ++i)
 	{
 		curNode = curNode->next;
-		i++;
 		printf("%d value %d\n",i, curNode->value);
 	}
 
 	printf("end\n");
+}
+
+void delList(Lnode* node)
+{
+	printf("del start\n");
+
+	Lnode *curNode = node;
+	Lnode *temp;
+	for (int i = 0; curNode && curNode->next; ++i)
+	{
+		temp = curNode;
+		curNode = curNode->next;
+		free(temp);
+		printf("%d value %d\n",i, curNode->value);
+	}
+
+	printf("del end\n");
 }

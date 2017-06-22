@@ -185,6 +185,7 @@ Lnode * mergeSortedList(Lnode *linkA, Lnode *linkB)
 
 void printList(Lnode* curNode);
 void delList(Lnode* node);
+Lnode* filterList(Lnode* node);
 
 int main(int argc,char *argv[])
 {
@@ -251,6 +252,12 @@ int main(int argc,char *argv[])
 	printList(mergeNodeList2);
 
 	printf("\n merge4\n");
+
+	printf("\n merge5\n");
+	Lnode *mergeNodeList3 = filterList(mergeNodeList2); 
+	printList(mergeNodeList3);
+
+	printf("\n merge6\n");
 	// Lnode *mergeNodeList2 = mergeSortedArray2(test1, sizeof(test1)/sizeof(int), test2, sizeof(test2)/sizeof(int));
 	// printList(mergeNodeList2);
 
@@ -301,4 +308,28 @@ void delList(Lnode* node)
 	}
 
 	printf("del end\n");
+}
+
+Lnode* filterList(Lnode* node)
+{
+	printf("filter start\n");
+
+	Lnode *curNode = node;
+	Lnode *retNode = node;
+	Lnode *temp;
+	for (int i = 0; curNode && curNode->next; ++i)
+	{
+		if (retNode != curNode && curNode->value == curNode->next->value) 
+		{
+			printf("%d value %d\n",i, curNode->next->value);
+			temp = curNode->next;
+			curNode->next = curNode->next->next;
+			free(temp);
+		}
+
+		curNode = curNode->next;
+	}
+
+	printf("filter end\n");
+	return retNode;
 }

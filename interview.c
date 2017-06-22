@@ -312,5 +312,10 @@ void delList(Lnode* node)
 		printf("%d value %d\n",i, curNode->value);
 	}
 
+	if (curNode)
+	{
+		free(curNode);
+	}
+
 	printf("del end\n");
 }

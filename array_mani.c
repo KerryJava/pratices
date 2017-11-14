@@ -12,11 +12,8 @@ int main() {
     scanf("%i %i", &n, &m);
 
     int *array = malloc(sizeof(int)*n);
-    
-    for(int i = 0; i < n; i++)
-    {
-	    array[i] = 0;
-    }
+
+    memset(array, 0, sizeof(int)*n);
 
     int max=0;
     for(int a0 = 0; a0 < m; a0++){
@@ -25,14 +22,22 @@ int main() {
         int k; 
         scanf("%i %i %i", &a, &b, &k);
 
-	for (int j = a; j < b; j++)
-	{
-		array[j] += k;
+	array[a] += k;
 
-		if (array[j] > max)
-		{
-			max = array[j];
-		}
+	if (b < n)
+	{
+		array[b] -= k;
+	}
+
+    }
+
+    int sum = 0;
+    for (int i = 0; i < n; i ++)
+    {
+	sum += array[i];
+	if (sum > max)
+	{
+		max = sum;
 	}
     }
 

@@ -5,54 +5,70 @@
 
 #define MAX 100000
 #define OFFSET 1
+#define INVALID (0-OFFSET)
+#define FIRST_IDX (1-OFFSET)
+
+typedef long	Type;
 
 typedef struct heap {
-	int		p          [MAX];
+	Type		p         [MAX];
 	int		idx;
 }		Heap;
 
 void 
-swap(int *a, int *b)
+swap(Type * a, Type * b)
 {
-	int		temp = *a;
+	Type		temp = *a;
 	*a = *b;
 	*b = temp;
 }
 
 int 
+parent(int idx)
+{
+	return ((idx + OFFSET) / 2 - OFFSET);
+}
+
+int 
 rightChild(int idx)
 {
-	return ((idx + OFFSET) * 2 + 1) - OFFSET;
+	return ((idx + OFFSET) << 1 + 1 - OFFSET);
+
 }
 
 int 
 leftChild(int idx)
 {
-	return ((idx + OFFSET)* 2) - OFFSET;
+	return ((idx + OFFSET) << 1 - OFFSET);
 }
 
 void 
 initHeap(Heap * h)
 {
-	h->idx = 0 - OFFSET;
+	h->idx = INVALID;
 }
 
 int 
 isEmpty(Heap * h)
 {
-	return h->idx == (0 - OFFSET);
+	return h->idx == INVALID;
 }
 
 void 
 heaplify(Heap * h, int idx)
 {
-
 	int		smallest = idx;
-	if (rightChild(idx) <= h->idx && h->p[rightChild(idx)] < h->p[smallest]) {
-		smallest = rightChild(idx);
+
+	if (idx > h->idx) {
+		return;
 	}
-	if (leftChild(idx) <= h->idx && h->p[leftChild(idx)] < h->p[smallest]) {
-		smallest = leftChild(idx);
+	int		right = rightChild(idx);
+	int		left = leftChild(idx);
+	if (right <= h->idx && h->p[right] < h->p[smallest]) {
+		smallest = right;
+	}
+	if (left <= h->idx && h->p[left] < h->p[smallest]) {
+		smallest = left;
 	}
 	if (smallest != idx) {
 		swap(&(h->p[smallest]), &(h->p[idx]));
@@ -61,40 +77,76 @@ heaplify(Heap * h, int idx)
 }
 
 void 
-insertHeap(Heap * h, int v)
+insertHeap(Heap * h, Type v)
 {
-	if (isEmpty(h)) {
-		h->idx++;
-		h->p[h->idx] = v;
-		return;
-	}
 	h->idx++;
 	h->p[h->idx] = v;
-	swap(&(h->p[h->idx]), &(h->p[1 - OFFSET]));
 
-	for (int i = h->idx; i >= (1 - OFFSET); i--) {
-		heaplify(h, i);
+	for (int i = h->idx; i > FIRST_IDX && h->p[parent(i)] > h->p[i]; i = parent(i)) {
+		swap(&(h->p[parent(i)]), &(h->p[i]));
+	}
+
+}
+
+void 
+deleteVal(Heap * h, long value, int idx)
+{
+	int		target = idx;
+
+	if (value < h->p[target]) {
+		return;
+	}
+	if (h->p[target] == value) {
+		swap(&(h->p[target]), &(h->p[h->idx]));
+		h->idx--;
+		heaplify(h, target);
+		return;
+	}
+	int		right = rightChild(idx);
+	if (right <= h->idx && h->p[right] >= h->p[target]) {
+		deleteVal(h, value, right);
+	}
+	int		left = leftChild(idx);
+
+	if (left <= h->idx && h->p[left] >= h->p[target]) {
+		deleteVal(h, value, left);
 	}
 }
 
 void 
-getMin(Heap * h, int *value)
+deleteHeapVal(Heap * h, Type value)
+{
+	deleteVal(h, value, FIRST_IDX);
+}
+
+void 
+getMin(Heap * h, Type * value)
 {
 	if (isEmpty(h)) {
 		return;
 	}
-	swap(&(h->p[1 - OFFSET]), &(h->p[h->idx]));
+	swap(&(h->p[FIRST_IDX]), &(h->p[h->idx]));
 	h->idx--;
 	heaplify(h, h->idx);
 }
 
 void 
-printHeap(Heap h)
+printHeap(Heap * h)
 {
-	printf("%d\n", h.p[0]);
+	if (isEmpty(h))
+		return;
+	printf("%ld\n", h->p[FIRST_IDX]);
 }
 
+void 
+printAll(Heap h)
+{
+	for (int i = 0; i <= h.idx; i++) {
+		printf("|%d ", h.p[i]);
+	}
 
+	printf("\n");
+}
 
 int 
 main()
@@ -104,7 +156,7 @@ main()
 
 	int		cnt = 0;
 	int		operate;
-	int		input;
+	Type		input;
 	int		newline;
 	int		temp;
 	Heap		heap;
@@ -114,32 +166,20 @@ main()
 
 		switch (operate) {
 		case 1:
-			scanf("%d", &input);
-//			printf("operate %d - %d\n",operate,  input);
+			scanf("%ld", &input);
 			insertHeap(&heap, input);
 			break;
 		case 2:
-			scanf("%d", &input);
-//			printf("operate %d - %d\n",operate,  input);
-			getMin(&heap, &temp);
+			scanf("%ld", &input);
+			deleteHeapVal(&heap, input);
 			break;
 		case 3:
-			if (cnt != num -1)
-			{
-//				scanf("%d", &newline);
-			}
-
-//			printf("operate %d  ",operate);
-			printHeap(heap);
+			printHeap(&heap);
 			break;
 		}
 
 		cnt++;
 	}
 
-	/*
-	 * Enter your code here. Read input from STDIN. Print output to
-	 * STDOUT
-	 */
 	return 0;
 }

@@ -3,6 +3,11 @@
 
 int cut(int *price, int n, int *r, int *s)
 {
+	if (r[n] != -1)
+	{
+		return r[n];
+	}
+
 	int max = 0;
 	r[n] = max;
 	for (int i = 1; i <= n; i++)
@@ -30,7 +35,7 @@ void cutrod(int *price, int n)
 
 	for (int j = 0; j <= n; j++)
 	{
-		r[j] = 0;
+		r[j] = -1;
 	}
 
 	int i = cut(price, n, r, s);
